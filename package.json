@@ -2,8 +2,12 @@
   "name": "heipai",
   "version": "0.0.0",
   "main": "index.js",
+  "scripts": {
+    "start": "nodemon main.js"
+  },
   "dependencies": {
     "axios": "^0.21.1",
+    "chinese-conv": "^1.0.1",
     "express": "~4.16.1",
     "lodash": "^4.17.20",
     "nodemon": "^2.0.7"
