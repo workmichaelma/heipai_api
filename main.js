@@ -5,7 +5,10 @@ var App = require("./app");
 
 app.get("/", (req, res) => {
   try {
-    App.handler()
+    const event = {
+      queryStringParameters: req.query,
+    };
+    App.handler(event)
       .then((e) => {
         const { body } = e || {};
         if (body) {

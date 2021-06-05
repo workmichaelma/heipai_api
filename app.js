@@ -1,13 +1,13 @@
 exports.handler = async (event) => {
   // TODO implement
   const axios = require("axios");
-  var { get, map, sortBy, filter, includes } = require("lodash");
+  const { all = false } = event.queryStringParameters || {};
+  var { get, map, sortBy, filter, includes, uniq } = require("lodash");
   var chineseConv = require("chinese-conv");
   const featuredLeagues = [
     "英超",
     "西甲",
     "意甲",
-    "法甲",
     "法甲",
     "英足总杯",
     "德甲",
@@ -23,6 +23,17 @@ exports.handler = async (event) => {
     "欧罗巴杯",
   ];
 
+  const basicLeagues = [
+    "西乙",
+    "巴西甲",
+    "日联杯",
+    "日皇杯",
+    "日职乙",
+    "韩K联",
+    "韩K2联",
+    "澳洲甲",
+    "智利甲",
+  ];
   const ch = (s) => {
     try {
       return chineseConv.tify(s);
@@ -52,10 +63,10 @@ exports.handler = async (event) => {
           mstartTime,
         } = match;
         return {
-          league: ch(league),
-          homeName: ch(homeName),
+          league,
+          homeName,
           homeLogo,
-          awayName: ch(awayName),
+          awayName,
           awayLogo,
           id,
           source: sortBy(
@@ -74,10 +85,20 @@ exports.handler = async (event) => {
       });
 
       const matches = filter(_matches, (m) => {
-        return includes(featuredLeagues, m.league);
+        return includes(
+          [...(all === "true" ? basicLeagues : []), ...featuredLeagues],
+          m.league
+        );
       });
 
-      return matches;
+      return map(matches, (m) => {
+        return {
+          ...m,
+          league: ch(m.league),
+          homeName: ch(m.homeName),
+          awayName: ch(m.awayName),
+        };
+      });
     });
 
   const response = {
