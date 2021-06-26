@@ -71,9 +71,9 @@ exports.handler = async (event) => {
     }
   };
 
-  const getLiveUrl = async (id) => {
-    const liveA = `https://www.365heibai.com/play-iframe/${id}`;
-    const liveB = `https://www.heibaizhibo.com/play-iframe/${id}`;
+  const getLiveUrl = async (id, source) => {
+    const liveA = `https://www.365heibai.com/play-iframe/${id}#${source}`;
+    const liveB = `https://www.heibaizhibo.com/play-iframe/${id}#${source}`;
     let url = await isUrlExist(liveA);
     if (!url) {
       url = await isUrlExist(liveB);
@@ -137,7 +137,7 @@ exports.handler = async (event) => {
                 league: ch(m.league),
                 homeName: ch(m.homeName),
                 awayName: ch(m.awayName),
-                url: await getLiveUrl(m.id),
+                url: await getLiveUrl(m.id, get(m, "source[0].id", "")),
               };
             })
           );
