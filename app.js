@@ -72,8 +72,10 @@ exports.handler = async (event) => {
   };
 
   const getLiveUrl = async (id, source) => {
-    const liveA = `https://www.365heibai.com/play-iframe/${id}#${source}`;
-    const liveB = `https://www.heibaizhibo.com/play-iframe/${id}#${source}`;
+    const liveA = `https://www.heibaizhibo.com/play-iframe/${id}#${source}`;
+    const liveB = `https://www.heibai688.com/play-iframe/${id}#${source}`;
+
+    return [liveA, liveB];
     let url = await isUrlExist(liveA);
     if (!url) {
       url = await isUrlExist(liveB);
@@ -151,11 +153,10 @@ exports.handler = async (event) => {
       return [];
     }
   };
-
   const urlA =
-    "https://www.365heibai.com/api/index/index?sub_class=0&class1=1&page=1&size=500";
+    "https://www.heibaizhibo.com/api/index/index?sub_class=0&class1=1&page=1&size=500";
   const urlB =
-    "https://www.heibaizhibo.com/api/index/index?sub_class=0&class1=1&page=1&size=1000";
+    "https://www.heibai688.com/api/index/index?sub_class=0&class1=1&page=1&size=500";
 
   let matches = await getMatches(urlA);
   if (isEmpty(matches)) {
