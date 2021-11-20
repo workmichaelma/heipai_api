@@ -75,7 +75,7 @@ exports.handler = async (event) => {
     const liveA = `https://www.heibaizhibo.com/play-iframe/${id}#${source}`;
     const liveB = `https://www.heibai688.com/play-iframe/${id}#${source}`;
 
-    return [liveA, liveB];
+    return liveA;
     let url = await isUrlExist(liveA);
     if (!url) {
       url = await isUrlExist(liveB);
