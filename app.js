@@ -1,10 +1,19 @@
 exports.handler = async (event) => {
   // TODO implement
   const axios = require('axios')
-  const DOMAIN = process.env.DOMAIN || 'heibaizhibo'
+  const DOMAIN = process.env.DOMAIN || 'hbzb666'
   const { all = false } = event.queryStringParameters || {}
-  var { get, map, sortBy, filter, includes, isEmpty } = require('lodash')
+  var {
+    get,
+    map,
+    sortBy,
+    filter,
+    includes,
+    isEmpty,
+    toInteger,
+  } = require('lodash')
   var chineseConv = require('chinese-conv')
+  const dateFns = require('date-fns')
   const featuredLeagues = [
     '英超',
     '西甲',
@@ -116,7 +125,11 @@ exports.handler = async (event) => {
                   return s.title.indexOf('粤') > -1 ? -1 : 1
                 }
               ),
-              start: mstartTime * 1000,
+              date: dateFns.format(
+                toInteger(mstartTime * 1000),
+                'ccc, d MMM yyyy'
+              ),
+              time: dateFns.format(mstartTime * 1000, 'HH:mm'),
             }
           })
 
