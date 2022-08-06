@@ -2,6 +2,7 @@ exports.handler = async (event) => {
   // TODO implement
   const axios = require('axios')
   const DOMAIN = process.env.DOMAIN || 'hbzb666'
+  const timezoneModify = process.env.timezoneModify || 0
   const { all = false } = event.queryStringParameters || {}
   var {
     get,
@@ -11,6 +12,7 @@ exports.handler = async (event) => {
     includes,
     isEmpty,
     toInteger,
+    groupBy,
   } = require('lodash')
   var chineseConv = require('chinese-conv')
   const dateFns = require('date-fns')
@@ -107,6 +109,9 @@ exports.handler = async (event) => {
               id,
               mstartTime,
             } = match
+            const datetime = dateFns.add(new Date(mstartTime * 1000), {
+              hours: timezoneModify,
+            })
             return {
               league,
               homeName,
@@ -125,11 +130,8 @@ exports.handler = async (event) => {
                   return s.title.indexOf('粤') > -1 ? -1 : 1
                 }
               ),
-              date: dateFns.format(
-                toInteger(mstartTime * 1000),
-                'ccc, d MMM yyyy'
-              ),
-              time: dateFns.format(mstartTime * 1000, 'HH:mm'),
+              date: dateFns.format(datetime, 'ccc, d MMM yyyy'),
+              time: dateFns.format(datetime, 'HH:mm'),
             }
           })
 
@@ -163,7 +165,8 @@ exports.handler = async (event) => {
   }
   const url = `https://www.${DOMAIN}.com/api/index/index?sub_class=0&class1=1&page=1&size=500`
 
-  const matches = await getMatches(url)
+  const matches = (await getMatches(url)) || []
+  const groupedMatches = groupBy(matches, 'date')
 
   const response = {
     statusCode: 200,
@@ -171,7 +174,7 @@ exports.handler = async (event) => {
       'Access-Control-Allow-Origin': '*', // Required for CORS support to work
       'Access-Control-Allow-Credentials': true, // Required for cookies, authorization headers with HTTPS
     },
-    body: JSON.stringify(matches),
+    body: JSON.stringify(groupedMatches),
   }
   return response
 }
